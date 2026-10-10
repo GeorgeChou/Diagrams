@@ -1,0 +1,505 @@
+<title>AI Hardware Supply Chain Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a pannable, zoomable "wafer map" canvas. Ten layer cards sit on a 12-column grid,
+   wired top-to-bottom in the order goods move; a dashed litho-yellow wire carries capex back up.
+   Hovering a card opens a large docked panel with logos; the base cards stay text-only. */
+:root {
+  --bg: #e9edf0;          /* cleanroom wall gray, cool bias */
+  --dot: rgba(20, 30, 40, .09);
+  --panel: #fbfcfd;
+  --ink: #131a21;
+  --muted: #586470;
+  --line: #c7d0d8;
+  --wire: #7b8894;
+  --litho: #b98a00;       /* photolithography-room yellow, darkened for light ground */
+  --litho-ink: #6b5000;
+  --tile: #ffffff;
+  --shadow: 0 18px 50px -18px rgba(15, 25, 35, .35);
+  --s-up: #3d6a8c;  --s-fab: #1f7566;  --s-back: #66751f;  --s-sys: #a65a26;  --s-dem: #a33246;
+  --v-long: #2b7a3d; --v-sel: #a8700f; --v-neu: #66717c; --v-hedge: #b8322a; --v-dem: #3d6a8c;
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", "Hiragino Sans", "Malgun Gothic", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1115; --dot: rgba(220, 230, 240, .07); --panel: #151b21; --ink: #e5eaee; --muted: #93a0ab;
+    --line: #2a343d; --wire: #6c7a86; --litho: #f0c22e; --litho-ink: #f0c22e; --tile: #ffffff;
+    --shadow: 0 18px 60px -12px rgba(0, 0, 0, .7);
+    --s-up: #78a6c9; --s-fab: #4fb8a4; --s-back: #a9ba52; --s-sys: #e2925a; --s-dem: #e2738a;
+    --v-long: #5cc172; --v-sel: #e3ad48; --v-neu: #9aa6b1; --v-hedge: #f07167; --v-dem: #78a6c9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1115; --dot: rgba(220, 230, 240, .07); --panel: #151b21; --ink: #e5eaee; --muted: #93a0ab;
+  --line: #2a343d; --wire: #6c7a86; --litho: #f0c22e; --litho-ink: #f0c22e; --tile: #ffffff;
+  --shadow: 0 18px 60px -12px rgba(0, 0, 0, .7);
+  --s-up: #78a6c9; --s-fab: #4fb8a4; --s-back: #a9ba52; --s-sys: #e2925a; --s-dem: #e2738a;
+  --v-long: #5cc172; --v-sel: #e3ad48; --v-neu: #9aa6b1; --v-hedge: #f07167; --v-dem: #78a6c9;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); overflow: hidden; }
+.app { height: 100%; display: flex; flex-direction: column; }
+
+/* ---------- top bar ---------- */
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px;
+  padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: relative; z-index: 3; }
+.brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; min-width: 0; }
+.brand h1 { margin: 0; font: 760 22px/1.1 var(--f-display); font-stretch: 82%; letter-spacing: -.01em; text-wrap: balance; }
+.brand p { margin: 0; color: var(--muted); font-size: 13px; }
+.tools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.hint { color: var(--muted); font-size: 12px; margin-right: 8px; }
+.btn { font: 500 13px var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; height: 32px; min-width: 32px; padding: 0 10px; cursor: pointer; }
+.btn:hover { border-color: var(--wire); }
+.btn:focus-visible, .layer:focus-visible, .pop button:focus-visible { outline: 2px solid var(--litho); outline-offset: 2px; }
+.zoomval { font: 500 12px var(--f-mono); width: 48px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- canvas ---------- */
+.vp { position: relative; flex: 1; overflow: hidden; cursor: grab; touch-action: none;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.2px); background-size: 22px 22px; }
+.vp.dragging { cursor: grabbing; }
+.world { position: absolute; left: 0; top: 0; transform-origin: 0 0; width: 1320px; padding: 34px 96px 40px; box-sizing: border-box; }
+.grid { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 26px; row-gap: 70px; }
+.wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.wires path { fill: none; stroke: var(--wire); stroke-width: 1.6; transition: stroke .15s, opacity .15s; }
+.wires .money { stroke: var(--litho); stroke-width: 2; stroke-dasharray: 7 6; animation: flow 1.6s linear infinite; }
+.wires .abf { stroke-dasharray: 3 4; }
+.wires text { font: 500 11px var(--f-mono); fill: var(--muted); }
+.wires .lbl-bg { fill: var(--bg); stroke: none; }
+.wires .money-t { fill: var(--litho-ink); font-weight: 500; }
+.focus .wires path:not(.hot) { opacity: .25; }
+.wires path.hot { stroke: var(--ink); stroke-width: 2.2; }
+.wires path.money.hot { stroke: var(--litho); }
+@keyframes flow { to { stroke-dashoffset: -26; } }
+@media (prefers-reduced-motion: reduce) { .wires .money { animation: none; } .layer, .pop { transition: none !important; } }
+
+.layer { position: relative; z-index: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+  padding: 14px 16px 15px; cursor: pointer; transition: opacity .18s, border-color .15s, box-shadow .15s; min-width: 0; }
+.layer:hover, .layer.on { border-color: var(--c); box-shadow: 0 0 0 1px var(--c), var(--shadow); }
+.focus .layer:not(.on):not(.near) { opacity: .42; }
+.lh { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.num { font: 500 12px var(--f-mono); color: var(--panel); background: var(--c); border-radius: 3px; padding: 2px 6px; font-variant-numeric: tabular-nums; }
+.layer h2 { margin: 0; font: 720 18px/1.15 var(--f-display); font-stretch: 85%; letter-spacing: -.005em; }
+.stage { margin-left: auto; font: 500 10.5px var(--f-mono); color: var(--c); text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 9px 22px; }
+.g dt { font: 600 10.5px var(--f-body); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 2px; }
+.g dd { margin: 0; font-size: 13px; line-height: 1.45; }
+.g dd span + span::before { content: " · "; color: var(--muted); }
+
+.legend { position: absolute; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; display: flex; flex-wrap: wrap; gap: 6px 14px;
+  align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; font-size: 11.5px; color: var(--muted); max-width: calc(100% - 24px); }
+.legend i { display: inline-block; vertical-align: middle; margin-right: 6px; }
+.lg-wire { width: 22px; border-top: 1.6px solid var(--wire); }
+.lg-money { width: 22px; border-top: 2px dashed var(--litho); }
+.lg-sw { width: 9px; height: 9px; border-radius: 2px; background: var(--c); }
+
+/* ---------- pop-up panel ---------- */
+.pop { position: absolute; top: 12px; z-index: 4; width: min(640px, calc(100% - 24px)); max-height: calc(100% - 24px);
+  overflow: auto; overscroll-behavior: contain; background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--c);
+  border-radius: 6px; box-shadow: var(--shadow); padding: 18px 20px 20px; box-sizing: border-box; transition: opacity .14s, transform .14s; cursor: auto; }
+.pop.right { right: 12px; } .pop.left { left: 12px; }
+.pop.enter { opacity: 0; transform: translateY(6px); }
+.ph { display: flex; gap: 14px; align-items: flex-start; }
+.pnum { font: 800 46px/0.9 var(--f-display); font-stretch: 70%; color: var(--c); font-variant-numeric: tabular-nums; }
+.eyebrow { font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+.pop h3 { margin: 4px 0 0; font: 760 28px/1.08 var(--f-display); font-stretch: 85%; text-wrap: balance; }
+.close { margin-left: auto; flex: none; }
+.pin-note { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.prole { font-size: 16.5px; line-height: 1.5; margin: 12px 0 12px; max-width: 62ch; }
+.stats { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.stats li { font-size: 13.5px; font-weight: 500; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 5px 9px; font-variant-numeric: tabular-nums; }
+.feeds { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
+.feeds b { color: var(--ink); font-weight: 600; }
+.pg { margin-top: 16px; }
+.pg h4 { margin: 0 0 8px; font: 600 11.5px var(--f-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+  display: flex; align-items: center; gap: 10px; }
+.pg h4::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.cos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.co { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px; border-radius: 5px; border: 1px solid transparent; }
+.co:hover { border-color: var(--line); background: var(--bg); }
+.logo { width: 76px; height: 46px; background: var(--tile); border: 1px solid var(--line); border-radius: 5px; display: grid; place-items: center; overflow: hidden; }
+.logo img { max-width: 64px; max-height: 34px; width: auto; height: auto; object-fit: contain; }
+.logo img.svg { width: 64px; height: 34px; }
+.mono { font: 760 17px var(--f-display); font-stretch: 75%; color: var(--panel); background: var(--c); width: 100%; height: 100%; display: grid; place-items: center; letter-spacing: .02em; }
+.cn { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+.cl { font-size: 15px; line-height: 1.3; }
+.ct { font: 500 12.5px var(--f-mono); color: var(--c); margin-top: 1px; }
+.cnote { font-size: 13px; color: var(--muted); line-height: 1.35; margin-top: 1px; }
+.view { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13.5px; }
+.pill { font: 600 11.5px var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--panel); background: var(--vc); border-radius: 3px; padding: 3px 8px; }
+.view span:last-child { color: var(--muted); }
+
+@media (max-width: 720px) {
+  .hint { display: none; }
+  .brand h1 { font-size: 19px; }
+  .pop { left: 8px !important; right: 8px !important; top: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); width: auto; max-height: 66%; }
+  .legend { display: none; }
+}
+</style>
+
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <h1>AI Hardware Supply Chain</h1>
+      <p>10 layers, wafer to cloud · data as of <span id="asof"></span></p>
+    </div>
+    <div class="tools" role="toolbar" aria-label="Zoom">
+      <span class="hint">Hover a layer for companies · click to pin · scroll to zoom · drag to move</span>
+      <button class="btn" id="zout" aria-label="Zoom out">−</button>
+      <span class="zoomval" id="zval">100%</span>
+      <button class="btn" id="zin" aria-label="Zoom in">+</button>
+      <button class="btn" id="fitw">Fit width</button>
+      <button class="btn" id="fita">Fit all</button>
+    </div>
+  </header>
+  <main class="vp" id="vp" aria-label="Supply chain diagram">
+    <div class="world" id="world">
+      <div class="grid" id="grid">
+        <svg class="wires" id="wires" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="lg-wire"></i>Goods flow down</span>
+      <span><i class="lg-money"></i>Capex money flows back up</span>
+      <span><i class="lg-sw" style="--c:var(--s-up)"></i>Upstream</span>
+      <span><i class="lg-sw" style="--c:var(--s-fab)"></i>Wafer fab</span>
+      <span><i class="lg-sw" style="--c:var(--s-back)"></i>Back-end</span>
+      <span><i class="lg-sw" style="--c:var(--s-sys)"></i>Systems</span>
+      <span><i class="lg-sw" style="--c:var(--s-dem)"></i>Demand</span>
+    </div>
+    <aside class="pop" id="pop" hidden aria-live="polite"></aside>
+  </main>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const LOGOS = /*__LOGOS__*/{};
+
+const STAGE = {
+  up:   { c: "var(--s-up)",   name: "Upstream" },
+  fab:  { c: "var(--s-fab)",  name: "Wafer fab" },
+  back: { c: "var(--s-back)", name: "Back-end" },
+  sys:  { c: "var(--s-sys)",  name: "Systems" },
+  dem:  { c: "var(--s-dem)",  name: "Demand" }
+};
+const VIEW = {
+  long:      { label: "Structural long candidate", c: "var(--v-long)" },
+  selective: { label: "Selective / momentum-priced", c: "var(--v-sel)" },
+  neutral:   { label: "Neutral / pair-trade", c: "var(--v-neu)" },
+  hedge:     { label: "Hedge / short candidate", c: "var(--v-hedge)" },
+  demand:    { label: "Demand driver", c: "var(--v-dem)" }
+};
+// grid placement: [column-start, column-end, row]
+const PLACE = { 1:[1,5,1], 2:[5,9,1], 3:[9,13,1], 4:[1,8,2], 5:[8,13,2], 6:[1,13,3], 7:[1,5,4], 8:[5,13,4], 9:[1,13,5], 10:[1,13,6] };
+// goods flow: [from, to, label]
+const EDGES = [
+  [1,4,"wafers · resist"], [2,4,"tools"], [3,4,"chip designs"],
+  [4,6,"finished wafers"], [5,6,"HBM stacks"], [6,7,"packaged chips"],
+  [7,9,"tested chips"], [8,9,"boards · power · cooling"], [9,10,"AI racks"]
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const pad = n => String(n).padStart(2, "0");
+
+const vp = $("#vp"), world = $("#world"), grid = $("#grid"), wires = $("#wires"), pop = $("#pop");
+$("#asof").textContent = DATA.asOf;
+
+/* ---------- base cards (text only) ---------- */
+const byId = {};
+DATA.layers.forEach(L => {
+  byId[L.id] = L;
+  const st = STAGE[L.stage];
+  const el = document.createElement("article");
+  el.className = "layer";
+  el.tabIndex = 0;
+  el.dataset.id = L.id;
+  el.style.setProperty("--c", st.c);
+  const [c0, c1, r] = PLACE[L.id];
+  el.style.gridColumn = c0 + " / " + c1;
+  el.style.gridRow = r;
+  el.setAttribute("aria-label", "Layer " + L.id + ": " + L.title);
+  el.innerHTML =
+    '<div class="lh"><span class="num">' + pad(L.id) + '</span><h2>' + esc(L.title) + '</h2><span class="stage">' + st.name + '</span></div>' +
+    '<dl class="groups">' + L.groups.map(g =>
+      '<div class="g"><dt>' + esc(g.name) + '</dt><dd>' +
+      g.cos.map(c => '<span>' + esc(c.n.replace(/ \(.*\)$/, "")) + '</span>').join("") +
+      '</dd></div>').join("") + '</dl>';
+  grid.appendChild(el);
+  L.el = el;
+});
+
+/* ---------- wires ---------- */
+const NS = "http://www.w3.org/2000/svg";
+function rect(id) { const e = byId[id].el; return { l: e.offsetLeft, t: e.offsetTop, w: e.offsetWidth, h: e.offsetHeight, get r() { return this.l + this.w; }, get b() { return this.t + this.h; } }; }
+function mk(tag, attrs, parent) { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); (parent || wires).appendChild(n); return n; }
+function label(x, y, text, cls, vertical) {
+  const g = mk("g", {});
+  const t = mk("text", { x, y, class: cls || "" }, g);
+  t.textContent = text;
+  if (vertical) t.setAttribute("transform", "rotate(-90 " + x + " " + y + ")"), t.setAttribute("text-anchor", "middle");
+  const bb = t.getBBox();
+  const bg = mk("rect", { x: bb.x - 4, y: bb.y - 2, width: bb.width + 8, height: bb.height + 4, rx: 3, class: "lbl-bg" }, g);
+  if (vertical) bg.setAttribute("transform", t.getAttribute("transform"));
+  g.insertBefore(bg, t);
+}
+const edgeEls = [];
+function drawWires() {
+  wires.innerHTML = '<defs>' +
+    '<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--wire);stroke:none"/></marker>' +
+    '<marker id="ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--litho);stroke:none"/></marker>' +
+    '</defs>';
+  edgeEls.length = 0;
+  wires.setAttribute("width", grid.offsetWidth);
+  wires.setAttribute("height", grid.offsetHeight);
+  EDGES.forEach(([a, b, txt]) => {
+    const A = rect(a), B = rect(b);
+    const ol = Math.max(A.l, B.l) + 30, or_ = Math.min(A.r, B.r) - 30;
+    let d, lx, ly;
+    if (or_ > ol) {
+      let x = (Math.max(A.l, B.l) + Math.min(A.r, B.r)) / 2;
+      if (A.w < B.w) x = A.l + A.w / 2;
+      if (B.w < A.w) x = B.l + B.w / 2;
+      d = "M" + x + "," + A.b + " L" + x + "," + (B.t - 2);
+      lx = x + 8; ly = (A.b + B.t) / 2 + 4;
+    } else {
+      const x1 = A.l + A.w / 2, x2 = Math.min(Math.max(x1, B.l + 40), B.r - 40), my = (A.b + B.t) / 2;
+      d = "M" + x1 + "," + A.b + " C" + x1 + "," + my + " " + x2 + "," + my + " " + x2 + "," + (B.t - 2);
+      lx = (x1 + x2) / 2 + 8; ly = my + 4;
+    }
+    const p = mk("path", { d, "marker-end": "url(#ah)" });
+    edgeEls.push({ p, a, b });
+    label(lx, ly, txt);
+  });
+  // ABF film: Ajinomoto (1) → substrates (6), routed down the left gutter
+  const A1 = rect(1), A6 = rect(6), gx = -46;
+  const y1 = A1.t + A1.h * 0.72, y6 = A6.t + 34;
+  const pAbf = mk("path", { class: "abf", d: "M" + A1.l + "," + y1 + " H" + (gx + 10) + " Q" + gx + "," + y1 + " " + gx + "," + (y1 + 10) +
+    " V" + (y6 - 10) + " Q" + gx + "," + y6 + " " + (gx + 10) + "," + y6 + " H" + (A6.l - 2), "marker-end": "url(#ah)" });
+  edgeEls.push({ p: pAbf, a: 1, b: 6 });
+  label(gx, (y1 + y6) / 2, "ABF film (Ajinomoto ≈97%)", "", true);
+  // Money: demand (10) → back up the right gutter to the top layers
+  const D = rect(10), U = rect(3), W = grid.offsetWidth, rx = W + 46;
+  const yd = D.t + D.h / 2, yu = U.t + 28;
+  const pM = mk("path", { class: "money", d: "M" + D.r + "," + yd + " H" + (rx - 10) + " Q" + rx + "," + yd + " " + rx + "," + (yd - 10) +
+    " V" + (yu + 10) + " Q" + rx + "," + yu + " " + (rx - 10) + "," + yu + " H" + (U.r + 2), "marker-end": "url(#ahm)" });
+  edgeEls.push({ p: pM, a: 10, b: 0, money: true });
+  label(rx, (yd + yu) / 2, "Capex ≈US$720–745B (2026) pays every layer", "money-t", true);
+}
+
+/* ---------- zoom & pan ---------- */
+const S = { k: 1, x: 0, y: 0 };
+const KMIN = 0.2, KMAX = 3;
+function apply() {
+  world.style.transform = "translate(" + S.x + "px," + S.y + "px) scale(" + S.k + ")";
+  $("#zval").textContent = Math.round(S.k * 100) + "%";
+}
+function zoomAt(k, cx, cy) {
+  k = Math.min(KMAX, Math.max(KMIN, k));
+  S.x = cx - (cx - S.x) * (k / S.k);
+  S.y = cy - (cy - S.y) * (k / S.k);
+  S.k = k; apply();
+}
+function worldSize() { return { w: world.offsetWidth, h: world.offsetHeight }; }
+function fitAll() {
+  const { w, h } = worldSize(), vw = vp.clientWidth, vh = vp.clientHeight;
+  S.k = Math.min(vw / w, vh / h) * 0.98; S.x = (vw - w * S.k) / 2; S.y = (vh - h * S.k) / 2; apply();
+}
+function fitWidth() {
+  const { w } = worldSize(), vw = vp.clientWidth;
+  S.k = Math.min(1.25, vw / w); S.x = (vw - w * S.k) / 2; S.y = 0; apply();
+}
+function fitLayer(id) {
+  const r = rect(id), vw = vp.clientWidth, vh = vp.clientHeight;
+  const ox = grid.offsetLeft, oy = grid.offsetTop;
+  const k = Math.min(KMAX, Math.min(vw / (r.w + 80), vh / (r.h + 80)));
+  S.k = k; S.x = vw / 2 - (ox + r.l + r.w / 2) * k; S.y = vh / 2 - (oy + r.t + r.h / 2) * k; apply();
+}
+const vpPt = e => { const b = vp.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+vp.addEventListener("wheel", e => {
+  if (pop.contains(e.target)) return;
+  e.preventDefault();
+  const [cx, cy] = vpPt(e);
+  const f = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018));
+  zoomAt(S.k * f, cx, cy);
+}, { passive: false });
+$("#zin").onclick = () => zoomAt(S.k * 1.25, vp.clientWidth / 2, vp.clientHeight / 2);
+$("#zout").onclick = () => zoomAt(S.k / 1.25, vp.clientWidth / 2, vp.clientHeight / 2);
+$("#fita").onclick = fitAll;
+$("#fitw").onclick = fitWidth;
+
+const ptrs = new Map();
+let drag = null, moved = false, pinch = null, downEl = null;
+vp.addEventListener("pointerdown", e => {
+  if (pop.contains(e.target) || e.button > 0) return;
+  ptrs.set(e.pointerId, vpPt(e));
+  downEl = e.target;
+  vp.setPointerCapture(e.pointerId);
+  moved = false;
+  if (ptrs.size === 1) drag = { x: S.x, y: S.y, p: vpPt(e) };
+  if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()];
+    pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), k: S.k };
+  }
+});
+vp.addEventListener("pointermove", e => {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.set(e.pointerId, vpPt(e));
+  if (ptrs.size === 2 && pinch) {
+    const [a, b] = [...ptrs.values()];
+    const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+    zoomAt(pinch.k * d / pinch.d, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+    moved = true; return;
+  }
+  if (!drag) return;
+  const p = vpPt(e), dx = p[0] - drag.p[0], dy = p[1] - drag.p[1];
+  if (!moved && Math.hypot(dx, dy) < 5) return;
+  if (!moved) { moved = true; vp.classList.add("dragging"); if (!pinned) hide(true); }
+  S.x = drag.x + dx; S.y = drag.y + dy; apply();
+});
+function endPtr(e) {
+  ptrs.delete(e.pointerId);
+  if (ptrs.size < 2) pinch = null;
+  if (ptrs.size === 0) { drag = null; vp.classList.remove("dragging"); }
+}
+vp.addEventListener("pointerup", e => {
+  const wasMove = moved;
+  endPtr(e);
+  if (wasMove || !downEl || pop.contains(downEl)) return;
+  const card = downEl.closest && downEl.closest(".layer");
+  if (card) { const id = +card.dataset.id; if (pinned === id) unpin(); else show(id, e, true); }
+  else if (pinned) unpin();
+});
+vp.addEventListener("pointercancel", endPtr);
+vp.addEventListener("dblclick", e => { const card = e.target.closest(".layer"); if (card) fitLayer(+card.dataset.id); });
+
+/* ---------- pop-up ---------- */
+let pinned = null, current = null, hideT = null, showT = null;
+function initials(name) {
+  const base = name.replace(/\(.*\)/, "").trim();
+  const words = base.split(/\s+/);
+  if (words[0].length <= 4 && words[0] === words[0].toUpperCase()) return words[0];
+  return words.slice(0, 2).map(w => w[0]).join("").toUpperCase();
+}
+function logoHTML(c) {
+  const src = LOGOS[c.d];
+  const mono = '<div class="mono">' + esc(initials(c.n)) + '</div>';
+  if (!src) return mono;
+  const svg = src.startsWith("data:image/svg");
+  return '<img class="' + (svg ? "svg" : "") + '" src="' + src + '" alt="" data-mono="' + esc(initials(c.n)) + '">';
+}
+function render(L) {
+  const st = STAGE[L.stage], v = VIEW[L.view];
+  pop.style.setProperty("--c", st.c);
+  pop.innerHTML =
+    '<div class="ph"><div class="pnum">' + pad(L.id) + '</div><div><div class="eyebrow">Layer ' + L.id + ' of 10 · ' + st.name + '</div>' +
+    '<h3>' + esc(L.title) + '</h3>' + (pinned ? '<div class="pin-note">Pinned. Click the layer again, press Esc or close.</div>' : '') + '</div>' +
+    (pinned ? '<button class="btn close" id="pclose" aria-label="Close">Close</button>' : '') + '</div>' +
+    '<p class="prole">' + esc(L.role) + '</p>' +
+    '<ul class="stats">' + L.stats.map(s => '<li>' + esc(s) + '</li>').join("") + '</ul>' +
+    '<p class="feeds"><b>Feeds:</b> ' + esc(L.feeds) + '</p>' +
+    L.groups.map(g => '<section class="pg"><h4>' + esc(g.name) + '</h4><div class="cos">' + g.cos.map(c =>
+      '<div class="co"><div class="logo">' + logoHTML(c) + '</div><div>' +
+      '<div class="cn">' + esc(c.n) + '</div>' + (c.l ? '<div class="cl" lang="' + (/[぀-ヿ]/.test(c.l) ? "ja" : /[가-힯]/.test(c.l) ? "ko" : /[一-鿿]/.test(c.l) ? "zh-Hant" : "en") + '">' + esc(c.l) + '</div>' : '') +
+      '<div class="ct">' + esc(c.t) + '</div><div class="cnote">' + esc(c.note) + '</div></div></div>').join("") +
+      '</div></section>').join("") +
+    '<div class="view" style="--vc:' + v.c + '"><span class="pill">' + v.label + '</span><span>' + esc(L.viewNote) + '</span></div>';
+  pop.querySelectorAll(".logo img").forEach(img => {
+    const check = () => {
+      if (!img.classList.contains("svg") && Math.max(img.naturalWidth, img.naturalHeight) < 24) {
+        img.parentNode.innerHTML = '<div class="mono">' + esc(img.dataset.mono) + '</div>';
+      }
+    };
+    if (img.complete) check(); else img.onload = check;
+    img.onerror = () => { img.parentNode.innerHTML = '<div class="mono">' + esc(img.dataset.mono) + '</div>'; };
+  });
+  const cb = $("#pclose", pop); if (cb) cb.onclick = unpin;
+}
+function focusLayer(id) {
+  world.classList.add("focus");
+  const near = new Set([id]);
+  edgeEls.forEach(E => {
+    const hot = E.a === id || E.b === id || (E.money && (id === 10 || id <= 3));
+    E.p.classList.toggle("hot", hot);
+    if (hot && !E.money) { near.add(E.a); near.add(E.b); }
+  });
+  DATA.layers.forEach(L => { L.el.classList.toggle("on", L.id === id); L.el.classList.toggle("near", near.has(L.id) && L.id !== id); });
+}
+function clearFocus() {
+  world.classList.remove("focus");
+  edgeEls.forEach(E => E.p.classList.remove("hot"));
+  DATA.layers.forEach(L => L.el.classList.remove("on", "near"));
+}
+function dock(e) {
+  const b = vp.getBoundingClientRect();
+  const x = e && e.clientX != null ? e.clientX - b.left : vp.clientWidth / 2;
+  const right = x < vp.clientWidth / 2;
+  pop.classList.toggle("right", right); pop.classList.toggle("left", !right);
+}
+function show(id, e, pin) {
+  clearTimeout(hideT); clearTimeout(showT);
+  if (pin) pinned = id;
+  const fresh = pop.hidden || current !== id;
+  current = id;
+  if (fresh || pin) { render(byId[id]); pop.scrollTop = 0; }
+  if (fresh) dock(e);
+  focusLayer(id);
+  if (pop.hidden) { pop.hidden = false; pop.classList.add("enter"); requestAnimationFrame(() => pop.classList.remove("enter")); }
+}
+function hide(now) {
+  if (pinned) return;
+  clearTimeout(hideT);
+  const go = () => { pop.hidden = true; current = null; clearFocus(); };
+  if (now) go(); else hideT = setTimeout(go, 160);
+}
+function unpin() { pinned = null; hide(true); }
+
+grid.addEventListener("pointerover", e => {
+  if (e.pointerType !== "mouse" || drag && moved || pinned) return;
+  const card = e.target.closest(".layer"); if (!card) return;
+  const id = +card.dataset.id;
+  clearTimeout(hideT); clearTimeout(showT);
+  if (id === current) return;
+  showT = setTimeout(() => show(id, e), pop.hidden ? 90 : 40);
+});
+grid.addEventListener("pointerout", e => {
+  if (e.pointerType !== "mouse" || pinned) return;
+  const card = e.target.closest(".layer");
+  if (card && !card.contains(e.relatedTarget)) { clearTimeout(showT); hide(); }
+});
+pop.addEventListener("pointerenter", () => clearTimeout(hideT));
+pop.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") hide(); });
+grid.addEventListener("focusin", e => { const card = e.target.closest(".layer"); if (card && !pinned) show(+card.dataset.id, null); });
+grid.addEventListener("keydown", e => {
+  const card = e.target.closest(".layer"); if (!card) return;
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); const id = +card.dataset.id; pinned === id ? unpin() : show(id, null, true); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { unpin(); }
+  if (e.target.closest && e.target.closest("input,textarea")) return;
+  if (e.key === "+" || e.key === "=") $("#zin").click();
+  if (e.key === "-" || e.key === "_") $("#zout").click();
+  if (e.key === "0") fitAll();
+});
+
+/* ---------- boot ---------- */
+function layout(first) {
+  drawWires();
+  if (first) {
+    const { w, h } = worldSize();
+    const kAll = Math.min(vp.clientWidth / w, vp.clientHeight / h);
+    kAll >= 0.62 ? fitAll() : fitWidth();
+  }
+}
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => layout(true));
+layout(true);
+let rT; window.addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(() => layout(false), 120); });
+</script>

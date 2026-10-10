@@ -1,0 +1,269 @@
+{
+  "asOf": "October 2026",
+  "layers": [
+    {
+      "id": 1, "stage": "up", "title": "Materials & Wafers",
+      "role": "Silicon wafers, photoresist, specialty chemicals and the ABF film that goes into every chip substrate.",
+      "feeds": "Wafers and resist go to the foundry (4). ABF film goes to substrate makers (6).",
+      "stats": ["Ajinomoto makes ≈97% of ABF film", "Top-3 wafer makers dominate 300mm"],
+      "view": "neutral", "viewNote": "Lagging recovery; the AI lift is indirect",
+      "groups": [
+        {"name": "Silicon wafers", "cos": [
+          {"n": "Shin-Etsu Chemical", "l": "信越化学工業", "t": "4063.T", "d": "shinetsu.co.jp", "note": "#1 silicon wafers"},
+          {"n": "SUMCO", "l": "株式会社SUMCO", "t": "3436.T", "d": "sumcosi.com", "note": "#2 in 300mm"},
+          {"n": "GlobalWafers", "l": "環球晶圓", "t": "6488.TWO", "d": "sas-globalwafers.com", "note": "#3; Texas fab"},
+          {"n": "Siltronic", "l": "Siltronic AG", "t": "WAF.DE", "d": "siltronic.com", "note": "#4; Germany"},
+          {"n": "SK Siltron (via SK Inc.)", "l": "SK실트론 / SK㈜", "t": "034730.KS", "d": "sksiltron.com", "note": "Indirect exposure only"}
+        ]},
+        {"name": "Resist & chemicals", "cos": [
+          {"n": "Tokyo Ohka Kogyo", "l": "東京応化工業", "t": "4186.T", "d": "tok.co.jp", "note": "EUV photoresist"},
+          {"n": "Resonac", "l": "レゾナック", "t": "4004.T", "d": "resonac.com", "note": "Packaging and HBM materials"},
+          {"n": "Entegris", "l": "", "t": "ENTG", "d": "entegris.com", "note": "Filtration, CMP, FOUPs"}
+        ]},
+        {"name": "Substrate film", "cos": [
+          {"n": "Ajinomoto", "l": "味の素", "t": "2802.T", "d": "ajinomoto.com", "note": "ABF build-up film, ≈97% share"}
+        ]}
+      ]
+    },
+    {
+      "id": 2, "stage": "up", "title": "Equipment & Fab Build",
+      "role": "The machines that print, deposit, etch and inspect, plus Taiwan's packaging tools and cleanroom builders.",
+      "feeds": "Tools go to the foundry (4), memory makers (5) and packaging lines (6).",
+      "stats": ["ASML is the only EUV supplier", "ASML FY26 guide raised to €43–45B", "TSMC Q2 capex US$15.7B"],
+      "view": "long", "viewNote": "Supply-constrained; DRAM and logic capex broadening",
+      "groups": [
+        {"name": "Lithography", "cos": [
+          {"n": "ASML", "l": "ASML Holding", "t": "ASML · ASML.AS", "d": "asml.com", "note": "Sole EUV supplier; China ≈20% of sales"}
+        ]},
+        {"name": "Deposition · etch · inspection", "cos": [
+          {"n": "Applied Materials", "l": "", "t": "AMAT", "d": "appliedmaterials.com", "note": "Largest equipment vendor"},
+          {"n": "Lam Research", "l": "", "t": "LRCX", "d": "lamresearch.com", "note": "Etch and deposition; memory-heavy"},
+          {"n": "KLA", "l": "", "t": "KLAC", "d": "kla.com", "note": "Inspection and metrology"},
+          {"n": "Tokyo Electron", "l": "東京エレクトロン", "t": "8035.T", "d": "tel.com", "note": "Coater/developer, etch"},
+          {"n": "Lasertec", "l": "レーザーテック", "t": "6920.T", "d": "lasertec.co.jp", "note": "EUV mask inspection"},
+          {"n": "Screen Holdings", "l": "SCREENホールディングス", "t": "7735.T", "d": "screen.co.jp", "note": "Wafer cleaning"},
+          {"n": "Disco", "l": "ディスコ", "t": "6146.T", "d": "disco.co.jp", "note": "Dicing and grinding; HBM thinning"}
+        ]},
+        {"name": "Taiwan packaging tools", "cos": [
+          {"n": "Grand Process Technology", "l": "弘塑科技", "t": "3131.TWO", "d": "gptc.com.tw", "note": "Wet benches for CoWoS"},
+          {"n": "Scientech", "l": "辛耘", "t": "3583.TW", "d": "scientech.com.tw", "note": "Wet process, temporary bonding"},
+          {"n": "Gallant Micro Machining", "l": "均華精密", "t": "6640.TWO", "d": "gmm.com.tw", "note": "Die sorters and bonders"},
+          {"n": "All Ring Tech", "l": "萬潤科技", "t": "6187.TWO", "d": "allring-tech.com.tw", "note": "Dispensing and inspection"}
+        ]},
+        {"name": "Fab build & pods", "cos": [
+          {"n": "Gudeng Precision", "l": "家登精密", "t": "3680.TWO", "d": "gudeng.com", "note": "EUV reticle pods"},
+          {"n": "Marketech International", "l": "帆宣系統", "t": "6196.TW", "d": "mic-tw.com", "note": "Fab systems; ASML module partner"},
+          {"n": "United Integrated Services", "l": "漢唐集成", "t": "2404.TW", "d": "uisco.com.tw", "note": "Cleanroom construction"}
+        ]}
+      ]
+    },
+    {
+      "id": 3, "stage": "up", "title": "EDA, IP & Chip Design",
+      "role": "Design software and IP, the GPU and networking chip designers, and the houses that build custom chips for cloud companies.",
+      "feeds": "Finished designs go to the foundry (4) for manufacturing.",
+      "stats": ["Nvidia FQ2 revenue US$96.2B (+106%)", "Broadcom AI semis US$16.7B (+221%)", "Custom ASICs ≈27% of AI servers in 2026"],
+      "view": "selective", "viewNote": "GPUs hold the biggest profit pool; ASIC names are lumpy",
+      "groups": [
+        {"name": "EDA & IP", "cos": [
+          {"n": "Synopsys", "l": "", "t": "SNPS", "d": "synopsys.com", "note": "EDA + IP duopoly"},
+          {"n": "Cadence", "l": "", "t": "CDNS", "d": "cadence.com", "note": "EDA, emulation"},
+          {"n": "Arm Holdings", "l": "Arm Holdings plc", "t": "ARM", "d": "arm.com", "note": "CPU cores in Grace, Graviton, Axion"},
+          {"n": "eMemory", "l": "力旺電子", "t": "3529.TWO", "d": "ememory.com.tw", "note": "Memory and security IP"},
+          {"n": "M31 Technology", "l": "円星科技", "t": "6643.TWO", "d": "m31tech.com", "note": "Foundation IP"}
+        ]},
+        {"name": "Merchant chips", "cos": [
+          {"n": "Nvidia", "l": "", "t": "NVDA", "d": "nvidia.com", "note": "GM 75%; ≈US$5.7T market cap"},
+          {"n": "Broadcom", "l": "", "t": "AVGO", "d": "broadcom.com", "note": "Custom XPUs + Ethernet; 6 XPU customers"},
+          {"n": "AMD", "l": "", "t": "AMD", "d": "amd.com", "note": "Data Center +107%; MI450"},
+          {"n": "Marvell", "l": "", "t": "MRVL", "d": "marvell.com", "note": "Custom ASIC, optical DSPs"},
+          {"n": "Intel", "l": "", "t": "INTC", "d": "intel.com", "note": "Xeon host CPUs"},
+          {"n": "Qualcomm", "l": "", "t": "QCOM", "d": "qualcomm.com", "note": "Early data-center inference"},
+          {"n": "MediaTek", "l": "聯發科", "t": "2454.TW", "d": "mediatek.com", "note": "Google TPU second source"}
+        ]},
+        {"name": "Custom-chip design houses", "cos": [
+          {"n": "Alchip", "l": "世芯-KY", "t": "3661.TW", "d": "alchip.com", "note": "AWS Trainium 3 (3nm)"},
+          {"n": "Global Unichip (GUC)", "l": "創意電子", "t": "3443.TW", "d": "guc-asic.com", "note": "TSMC owns ≈35%"},
+          {"n": "ASPEED", "l": "信驊科技", "t": "5274.TWO", "d": "aspeedtech.com", "note": "Server BMC near-monopoly"}
+        ]}
+      ]
+    },
+    {
+      "id": 4, "stage": "fab", "title": "Foundry",
+      "role": "Wafer fabs that turn designs into chips. Nearly every AI accelerator is made at TSMC.",
+      "feeds": "Finished wafers go to advanced packaging (6).",
+      "stats": ["TSMC Q2 revenue US$40.2B (+33.7%)", "TSMC GM 67.7% · OM 60.3%", "Q3 guide US$44.6–45.8B"],
+      "view": "long", "viewNote": "TSMC is the core chokepoint; mature-node foundries are underweight candidates",
+      "groups": [
+        {"name": "Leading edge", "cos": [
+          {"n": "TSMC", "l": "台積電", "t": "2330.TW · TSM", "d": "tsmc.com", "note": "N3 / N2 / A16; 77% of wafer revenue ≤7nm"},
+          {"n": "Samsung Foundry", "l": "삼성전자", "t": "005930.KS", "d": "samsung.com", "note": "SF2; a distant #2"},
+          {"n": "Intel Foundry", "l": "", "t": "INTC", "d": "intel.com", "note": "18A; EMIB-T packaging"}
+        ]},
+        {"name": "Mature & specialty", "cos": [
+          {"n": "UMC", "l": "聯華電子", "t": "2303.TW · UMC", "d": "umc.com", "note": "22/28nm; CoWoS interposers"},
+          {"n": "GlobalFoundries", "l": "", "t": "GFS", "d": "gf.com", "note": "Specialty, silicon photonics"},
+          {"n": "Vanguard International", "l": "世界先進", "t": "5347.TWO", "d": "vis.com.tw", "note": "8\" / 12\" mature nodes"},
+          {"n": "SMIC", "l": "中芯国际", "t": "0981.HK", "d": "smics.com", "note": "China's leading foundry"},
+          {"n": "Hua Hong", "l": "华虹半导体", "t": "1347.HK", "d": "huahonggrace.com", "note": "China mature/specialty"}
+        ]}
+      ]
+    },
+    {
+      "id": 5, "stage": "fab", "title": "Memory",
+      "role": "High-bandwidth memory (HBM) stacked next to every AI chip, plus DRAM and NAND for servers.",
+      "feeds": "HBM stacks go into advanced packaging (6) beside the GPU.",
+      "stats": ["SK hynix holds 56.4% of HBM", "SK hynix operating margin 76%", "Micron FQ1 GM guide ≈86%"],
+      "view": "hedge", "viewNote": "Record-peak margins and a capex surge: the natural hedge",
+      "groups": [
+        {"name": "HBM leaders", "cos": [
+          {"n": "SK hynix", "l": "SK하이닉스", "t": "000660.KS · SKHY", "d": "skhynix.com", "note": "HBM4 shipping since Q2"},
+          {"n": "Samsung Electronics", "l": "삼성전자", "t": "005930.KS", "d": "samsung.com", "note": "Q3 OP ₩107.4T; HBM4 catch-up"},
+          {"n": "Micron", "l": "", "t": "MU", "d": "micron.com", "note": "2026 HBM sold out"}
+        ]},
+        {"name": "DRAM · NAND · back-end", "cos": [
+          {"n": "Nanya Technology", "l": "南亞科技", "t": "2408.TW", "d": "nanya.com", "note": "Commodity DRAM"},
+          {"n": "Winbond", "l": "華邦電子", "t": "2344.TW", "d": "winbond.com", "note": "Specialty DRAM, NOR"},
+          {"n": "Macronix", "l": "旺宏電子", "t": "2337.TW", "d": "macronix.com", "note": "NOR, SLC NAND"},
+          {"n": "Kioxia", "l": "キオクシア", "t": "285A.T", "d": "kioxia.com", "note": "Enterprise SSD NAND"},
+          {"n": "SanDisk", "l": "", "t": "SNDK", "d": "sandisk.com", "note": "NAND, data-center SSD"},
+          {"n": "ChipMOS", "l": "南茂科技", "t": "8150.TW · IMOS", "d": "chipmos.com", "note": "Memory test and packaging"}
+        ]}
+      ]
+    },
+    {
+      "id": 6, "stage": "back", "title": "Advanced Packaging & Substrates",
+      "role": "CoWoS and similar packaging joins the GPU die and HBM on a substrate. This is the tightest bottleneck in the chain.",
+      "feeds": "Packaged chips go to test (7).",
+      "stats": ["CoWoS ≈130k wafers/month end-2026 → ≈260k end-2028 (reported)", "ASE capex record US$10.5B", "ASE LEAP ≈US$3.7B, doubling in 2027"],
+      "view": "long", "viewNote": "Capacity doubling; OSAT margins expanding from a low base",
+      "groups": [
+        {"name": "2.5D / 3D packaging", "cos": [
+          {"n": "TSMC (CoWoS, SoIC)", "l": "台積電", "t": "2330.TW · TSM", "d": "tsmc.com", "note": "Nvidia takes >50% of CoWoS"},
+          {"n": "ASE Technology", "l": "日月光投控", "t": "3711.TW · ASX", "d": "aseglobal.com", "note": "Largest OSAT; CoWoS overflow"},
+          {"n": "Amkor", "l": "", "t": "AMKR", "d": "amkor.com", "note": "Arizona packaging campus"},
+          {"n": "Powertech", "l": "力成科技", "t": "6239.TW", "d": "pti.com.tw", "note": "Memory packaging, panel-level"}
+        ]},
+        {"name": "ABF substrates", "cos": [
+          {"n": "Ibiden", "l": "イビデン", "t": "4062.T", "d": "ibiden.com", "note": "Top-tier ABF"},
+          {"n": "Unimicron", "l": "欣興電子", "t": "3037.TW", "d": "unimicron.com", "note": "#1 Taiwan ABF + PCB"},
+          {"n": "Nan Ya PCB", "l": "南亞電路板", "t": "8046.TW", "d": "nanyapcb.com.tw", "note": "ABF substrates"},
+          {"n": "Kinsus", "l": "景碩科技", "t": "3189.TW", "d": "kinsus.com.tw", "note": "ABF/BT substrates"},
+          {"n": "AT&S", "l": "AT&S Austria", "t": "ATS.VI", "d": "ats.net", "note": "Austria / Malaysia"},
+          {"n": "Samsung Electro-Mechanics", "l": "삼성전기", "t": "009150.KS", "d": "samsungsem.com", "note": "FC-BGA for ASICs"}
+        ]}
+      ]
+    },
+    {
+      "id": 7, "stage": "back", "title": "Test",
+      "role": "Testers, probe cards and sockets check every die and package. Test time grows with chip complexity.",
+      "feeds": "Tested chips go to the rack builders (9).",
+      "stats": ["2026 tester market raised ≈19% to US$13.0–14.5B", "Advantest operating margin ≈49%"],
+      "view": "long", "viewNote": "Test content rises with each chip generation",
+      "groups": [
+        {"name": "Testers", "cos": [
+          {"n": "Advantest", "l": "アドバンテスト", "t": "6857.T", "d": "advantest.com", "note": "AI SoC test leader"},
+          {"n": "Teradyne", "l": "", "t": "TER", "d": "teradyne.com", "note": "#2 in SoC test"}
+        ]},
+        {"name": "Probe cards & sockets", "cos": [
+          {"n": "FormFactor", "l": "", "t": "FORM", "d": "formfactor.com", "note": "Probe cards incl. HBM"},
+          {"n": "MPI Corporation", "l": "旺矽科技", "t": "6223.TWO", "d": "mpi-corporation.com", "note": "Probe cards for GPU/ASIC"},
+          {"n": "Chunghwa Precision Test", "l": "中華精測", "t": "6510.TWO", "d": "chpt.com.tw", "note": "Probe cards, load boards"},
+          {"n": "WinWay Technology", "l": "穎崴科技", "t": "6515.TW", "d": "winwayglobal.com", "note": "Sockets for large AI packages"}
+        ]},
+        {"name": "Test services", "cos": [
+          {"n": "KYEC", "l": "京元電子", "t": "2449.TW", "d": "kyec.com.tw", "note": "Nvidia GPU final test"}
+        ]}
+      ]
+    },
+    {
+      "id": 8, "stage": "sys", "title": "Board & System Components",
+      "role": "Everything around the chip: laminates and PCBs, networking and optics, power and liquid cooling, connectors and rails.",
+      "feeds": "Boards, power, cooling and cables go to the rack builders (9).",
+      "stats": ["Global CCL market +34% in 2026", "Elite Material holds 38.6% of high-speed CCL", "Delta net income +80% YoY"],
+      "view": "selective", "viewNote": "CCL is momentum-priced; power and cooling look structural",
+      "groups": [
+        {"name": "Laminate (CCL) → PCB", "cos": [
+          {"n": "Elite Material", "l": "台光電子材料", "t": "2383.TW", "d": "emctw.com", "note": "#1 global CCL"},
+          {"n": "Taiwan Union Technology", "l": "台燿科技", "t": "6274.TW", "d": "tuc.com.tw", "note": "High-speed CCL"},
+          {"n": "ITEQ", "l": "聯茂電子", "t": "6213.TW", "d": "iteq.com.tw", "note": "CCL"},
+          {"n": "Gold Circuit Electronics", "l": "金像電子", "t": "2368.TW", "d": "gce.com.tw", "note": "AI server PCB"},
+          {"n": "Tripod Technology", "l": "健鼎科技", "t": "3044.TW", "d": "tripod-tech.com", "note": "Server and HDI PCB"}
+        ]},
+        {"name": "Networking & optics", "cos": [
+          {"n": "Arista Networks", "l": "", "t": "ANET", "d": "arista.com", "note": "AI Ethernet switches"},
+          {"n": "Credo", "l": "", "t": "CRDO", "d": "credosemi.com", "note": "Active electrical cables"},
+          {"n": "Astera Labs", "l": "", "t": "ALAB", "d": "asteralabs.com", "note": "Retimers, scale-up switches"},
+          {"n": "Coherent", "l": "", "t": "COHR", "d": "coherent.com", "note": "Transceivers, lasers"},
+          {"n": "Lumentum", "l": "", "t": "LITE", "d": "lumentum.com", "note": "Lasers (tight supply)"},
+          {"n": "Innolight", "l": "中际旭创", "t": "300308.SZ", "d": "innolight.com", "note": "#1 800G/1.6T modules"},
+          {"n": "Eoptolink", "l": "新易盛", "t": "300502.SZ", "d": "eoptolink.com", "note": "Transceivers"},
+          {"n": "LandMark Optoelectronics", "l": "聯亞光電", "t": "3081.TWO", "d": "lmoc.com.tw", "note": "InP laser epi-wafers"},
+          {"n": "FOCI Fiber Optic", "l": "上詮光纖通信", "t": "3363.TWO", "d": "foci.com.tw", "note": "CPO fiber coupling"},
+          {"n": "Accton", "l": "智邦科技", "t": "2345.TW", "d": "accton.com", "note": "White-box switches"}
+        ]},
+        {"name": "Power & cooling", "cos": [
+          {"n": "Delta Electronics", "l": "台達電子", "t": "2308.TW", "d": "deltaww.com", "note": "800VDC power, CDUs"},
+          {"n": "Lite-On Technology", "l": "光寶科技", "t": "2301.TW", "d": "liteon.com", "note": "Power shelves, CDUs"},
+          {"n": "Asia Vital Components", "l": "奇鋐科技", "t": "3017.TW", "d": "avc.co", "note": "Cold plates, manifolds"},
+          {"n": "Auras Technology", "l": "雙鴻科技", "t": "3324.TWO", "d": "auras.com.tw", "note": "Cold plates, CDUs"},
+          {"n": "Vertiv", "l": "", "t": "VRT", "d": "vertiv.com", "note": "Data-center power and thermal"},
+          {"n": "Schneider Electric", "l": "Schneider Electric SE", "t": "SU.PA", "d": "se.com", "note": "Power distribution, cooling"},
+          {"n": "Eaton", "l": "", "t": "ETN", "d": "eaton.com", "note": "Electrical gear, 800VDC"}
+        ]},
+        {"name": "Connectors & mechanics", "cos": [
+          {"n": "Amphenol", "l": "", "t": "APH", "d": "amphenol.com", "note": "NVLink copper cables"},
+          {"n": "Lotes", "l": "嘉澤端子", "t": "3533.TW", "d": "lotes.cc", "note": "CPU/GPU sockets"},
+          {"n": "BizLink", "l": "貿聯-KY", "t": "3665.TW", "d": "bizlinktech.com", "note": "High-speed cables"},
+          {"n": "King Slide", "l": "川湖科技", "t": "2059.TW", "d": "kingslide.com", "note": "Server rails"},
+          {"n": "Chenbro", "l": "勤誠興業", "t": "8210.TW", "d": "chenbro.com", "note": "Server chassis"}
+        ]}
+      ]
+    },
+    {
+      "id": 9, "stage": "sys", "title": "Server & Rack Assembly",
+      "role": "Taiwan ODMs build most AI racks: huge revenue, thin margins.",
+      "feeds": "Finished racks go to cloud companies and AI labs (10).",
+      "stats": ["Hon Hai Q2 revenue NT$2.53T (+41%)", "Hon Hai gross margin 6.1%", "Wistron Aug revenue +166.5%"],
+      "view": "neutral", "viewNote": "Volume story with thin margins; pair-trade candidates",
+      "groups": [
+        {"name": "Taiwan ODMs", "cos": [
+          {"n": "Hon Hai (Foxconn)", "l": "鴻海精密", "t": "2317.TW", "d": "foxconn.com", "note": "Largest Nvidia rack builder"},
+          {"n": "Foxconn Industrial Internet", "l": "工業富聯", "t": "601138.SS", "d": "fii-foxconn.com", "note": "Hon Hai's server arm"},
+          {"n": "Quanta Computer", "l": "廣達電腦", "t": "2382.TW", "d": "quantatw.com", "note": "GPU and ASIC servers"},
+          {"n": "Wistron", "l": "緯創資通", "t": "3231.TW", "d": "wistron.com", "note": "GPU boards, compute trays"},
+          {"n": "Wiwynn", "l": "緯穎科技", "t": "6669.TW", "d": "wiwynn.com", "note": "Microsoft, Meta, AWS racks"},
+          {"n": "Inventec", "l": "英業達", "t": "2356.TW", "d": "inventec.com", "note": "Boards, ASIC servers"},
+          {"n": "Gigabyte", "l": "技嘉科技", "t": "2376.TW", "d": "gigabyte.com", "note": "GPU servers for neoclouds"},
+          {"n": "ASUS", "l": "華碩電腦", "t": "2357.TW", "d": "asus.com", "note": "Enterprise AI servers"}
+        ]},
+        {"name": "US system makers", "cos": [
+          {"n": "Dell Technologies", "l": "", "t": "DELL", "d": "dell.com", "note": "CoreWeave, xAI, enterprise"},
+          {"n": "Hewlett Packard Enterprise", "l": "", "t": "HPE", "d": "hpe.com", "note": "AI systems + Juniper"},
+          {"n": "Super Micro Computer", "l": "", "t": "SMCI", "d": "supermicro.com", "note": "Thin margins; short candidate"}
+        ]}
+      ]
+    },
+    {
+      "id": 10, "stage": "dem", "title": "End Demand",
+      "role": "Cloud companies, neoclouds and AI labs buy the racks. Their capex is the money that funds every layer above.",
+      "feeds": "Capex flows back up the chain to every supplier.",
+      "stats": ["Big-4 2026 capex ≈US$720–745B (+≈78%)", "Street sees >US$1T in 2027"],
+      "view": "demand", "viewNote": "The demand driver: watch capex revisions each earnings season",
+      "groups": [
+        {"name": "Hyperscalers (2026 capex guide)", "cos": [
+          {"n": "Amazon", "l": "", "t": "AMZN", "d": "amazon.com", "note": "≈US$220B"},
+          {"n": "Alphabet", "l": "", "t": "GOOGL", "d": "google.com", "note": "US$195–205B"},
+          {"n": "Microsoft", "l": "", "t": "MSFT", "d": "microsoft.com", "note": "≈US$175B"},
+          {"n": "Meta", "l": "", "t": "META", "d": "meta.com", "note": "US$130–145B"},
+          {"n": "Oracle", "l": "", "t": "ORCL", "d": "oracle.com", "note": "≈US$50B; Stargate partner"}
+        ]},
+        {"name": "Neoclouds & AI labs", "cos": [
+          {"n": "CoreWeave", "l": "", "t": "CRWV", "d": "coreweave.com", "note": "GPU cloud"},
+          {"n": "OpenAI", "l": "", "t": "Private", "d": "openai.com", "note": "Stargate"},
+          {"n": "Anthropic", "l": "", "t": "Private", "d": "anthropic.com", "note": "TPU, Trainium, MI450"},
+          {"n": "xAI", "l": "", "t": "Private", "d": "x.ai", "note": "GPU racks"}
+        ]}
+      ]
+    }
+  ]
+}
