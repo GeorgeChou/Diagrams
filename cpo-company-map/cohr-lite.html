@@ -1,0 +1,148 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  :root{
+    --ink:#2b2b2b; --muted:#666;
+    --cohr:#1f5fa8; --cohr-bg:#eaf1fb;
+    --lite:#a3245a; --lite-bg:#fbeaf1;
+    --laser:#f0997b; --laser-b:#b9472b;
+    --pic:#e1f3ec; --pic-b:#2b8a63;
+    --asic:#ecebfc; --asic-b:#4b3fa3;
+    --abf:#faecd9; --abf-b:#8a5a1e;
+    --sub:#ece7df; --sub-b:#7a6a55;
+    --ocs:#e4eef8; --ocs-b:#3a6d9a;
+    --none:#f2f2f2; --none-b:#b5b5b5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+  .wrap{width:2000px;padding:34px 30px 26px}
+  h1{font-size:40px;margin:0 0 8px;text-align:center;letter-spacing:-.3px}
+  .sub{font-size:20px;color:var(--muted);text-align:center;margin-bottom:22px}
+
+  .band{display:flex;align-items:center;gap:22px;border-radius:10px;padding:14px 20px;margin:0 0 14px}
+  .band.c{background:var(--cohr-bg);border:2px solid var(--cohr)}
+  .band.l{background:var(--lite-bg);border:2px solid var(--lite)}
+  .band .name{font-size:28px;font-weight:bold;width:330px;line-height:1.15}
+  .band.c .name{color:var(--cohr)} .band.l .name{color:var(--lite)}
+  .band .name small{display:block;font-size:17px;font-weight:normal;color:var(--muted)}
+  .bar{flex:1}
+  .bar .track{display:flex;height:40px;border-radius:6px;overflow:hidden;font-size:18px;font-weight:bold;color:#fff}
+  .bar .seg{display:flex;align-items:center;padding-left:12px;white-space:nowrap}
+  .bar .fy{font-size:17px;color:var(--muted);margin-top:6px}
+
+  .grid{display:grid;grid-template-columns:repeat(5,1fr) 30px 1fr;column-gap:16px}
+  .call{border-radius:10px;padding:13px 14px 12px;font-size:17px;line-height:1.3;min-height:208px;display:flex;flex-direction:column}
+  .call.c{background:#fff;border:2px solid var(--cohr)}
+  .call.l{background:#fff;border:2px solid var(--lite)}
+  .call .p{font-weight:bold;font-size:19px;margin-bottom:6px}
+  .call.c .p{color:var(--cohr)} .call.l .p{color:var(--lite)}
+  .call .d{color:#444;flex:1}
+  .rev{margin-top:9px;border-radius:6px;padding:6px 8px;font-weight:bold;font-size:16px;white-space:nowrap}
+  .call.c .rev{background:var(--cohr);color:#fff}
+  .call.l .rev{background:var(--lite);color:#fff}
+  .rev.zero{background:#fff !important;color:#555 !important;border:2px dashed #999}
+  .rev.feed{background:#fff !important;border:2px solid currentColor}
+  .call.c .rev.feed{color:var(--cohr)} .call.l .rev.feed{color:var(--lite)}
+  .call.none{border:2px dashed var(--none-b);background:var(--none);color:#777;justify-content:center;text-align:center}
+
+  .stick{height:22px;display:flex;justify-content:center}
+  .stick span{width:3px;height:100%;background:#999}
+
+  .stage{height:150px;border-radius:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-size:18px;position:relative;padding:8px}
+  .stage b{font-size:21px;display:block;margin-bottom:4px}
+  .stage .zh{font-size:16px;color:#555}
+  .s1{background:var(--sub);border:2px solid var(--sub-b)}
+  .s2{background:var(--laser);border:2px solid var(--laser-b)}
+  .s3{background:var(--laser);border:2px solid var(--laser-b);border-radius:22px}
+  .s4{background:var(--abf);border:2px solid var(--abf-b);flex-direction:row;gap:8px;padding:10px}
+  .s4 .asic{background:var(--asic);border:2px solid var(--asic-b);color:var(--asic-b);font-weight:bold;width:108px;height:96px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;line-height:1.2;border-radius:4px}
+  .s4 .eng{background:var(--pic);border:2px solid var(--pic-b);color:#1d5e43;width:138px;height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;border-radius:4px;line-height:1.2}
+  .s4 .eng b{font-size:17px;margin:0}
+  .s5{background:var(--ocs);border:2px solid var(--ocs-b)}
+  .s6{background:#fafafa;border:2px dashed #888}
+  .stage.arrow::after{content:"";position:absolute;right:-17px;top:50%;width:16px;height:4px;background:#c0462a;transform:translateY(-50%)}
+  .stage.arrow::before{content:"";position:absolute;right:-24px;top:50%;transform:translateY(-50%);border-left:12px solid #c0462a;border-top:9px solid transparent;border-bottom:9px solid transparent}
+  .stage.fiber::after{background:#2b8a63}
+  .stage.fiber::before{border-left-color:#2b8a63}
+  .vsep{display:flex;justify-content:center}
+  .vsep span{border-left:3px dashed #aaa;height:100%}
+  .lane{font-size:16px;color:#c0462a;text-align:center;margin:6px 0 0}
+  .lanes{display:grid;grid-template-columns:repeat(5,1fr) 30px 1fr;column-gap:16px;margin-top:4px}
+  .lanes div{font-size:15px;text-align:center;color:#555}
+
+  .off{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  .offbox{border-radius:10px;padding:12px 16px;font-size:17px;line-height:1.35}
+  .offbox.c{border:2px solid var(--cohr);background:var(--cohr-bg)}
+  .offbox.l{border:2px solid var(--lite);background:var(--lite-bg)}
+  .offbox h3{margin:0 0 6px;font-size:19px}
+  .offbox.c h3{color:var(--cohr)} .offbox.l h3{color:var(--lite)}
+  .offbox .row{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+  .offbox .row b{white-space:nowrap}
+  .foot{font-size:15px;color:#666;margin-top:16px;line-height:1.4}
+</style></head>
+<body><div class="wrap">
+  <h1>Coherent vs Lumentum on the CPO light path — products, revenue and share of own revenue</h1>
+  <div class="sub">Quarter ended June 2026 (both companies' fiscal Q4 FY26). Neither reports revenue by product, so each label shows the reporting line the product sits in, plus what management disclosed about it.</div>
+
+  <div class="band c">
+    <div class="name">Coherent (COHR)<small>Q4 revenue $2,045.5M · reports by segment</small></div>
+    <div class="bar">
+      <div class="track"><div class="seg" style="width:79.0%;background:var(--cohr)">Datacenter &amp; Communications $1,615.0M · 79.0%</div><div class="seg" style="width:21.0%;background:#7f9fc6">Industrial $430.5M · 21.0%</div></div>
+      <div class="fy">FY26: $7,118.2M — D&amp;C $5,274.6M (74.1%) · Industrial $1,843.6M (25.9%)</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="call c"><div class="p">6-inch InP wafers, in-house</div><div class="d">Internal InP output doubling by end of Sep-26 quarter. A 6" wafer gives ≈4× the output of a 3" at ≈½ the cost.</div><div class="rev feed">Not sold — feeds D&amp;C lasers</div></div>
+    <div class="call c"><div class="p">EML, CW-DFB, VCSEL lasers</div><div class="d">InP lasers produced +80% YoY. 400 mW high-power CW laser for CPO in development.</div><div class="rev">In D&amp;C · $1,615.0M · 79.0%</div></div>
+    <div class="call none">No external-laser module product or revenue disclosed</div>
+    <div class="call c"><div class="p">CPO optical engines</div><div class="d">First CPO revenue expected Dec-26 quarter; scale-up CPO from 2H CY2027.</div><div class="rev zero">$0 · 0% today</div></div>
+    <div class="call c"><div class="p">Liquid-crystal OCS</div><div class="d">Revenue rose QoQ (no $ given). Company sizes the opportunity at &gt;$4B.</div><div class="rev">In D&amp;C · $1,615.0M · 79.0%</div></div>
+    <div></div>
+    <div class="call c"><div class="p">800G / 1.6T transceivers</div><div class="d">Largest product line. Datacenter revenue +66% YoY; 1.6T ramp pulled in.</div><div class="rev">In D&amp;C · $1,615.0M · 79.0%</div></div>
+  </div>
+
+  <div class="grid"><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div></div><div class="stick"><span></span></div></div>
+
+  <div class="grid">
+    <div class="stage s1 arrow"><b>InP substrate &amp; epi</b>crystal → wafer → epi layers<div class="zh">磷化銦基板 / 磊晶</div></div>
+    <div class="stage s2 arrow"><b>InP laser chips</b>EML · CW-DFB · high-power CW<div class="zh">雷射晶片</div></div>
+    <div class="stage s3 arrow"><b>External laser (ELSFP)</b>CW lasers at front panel, light piped by fiber<div class="zh">外置光源模組</div></div>
+    <div class="stage s4 arrow fiber"><div class="asic">Switch<br>ASIC / GPU</div><div class="eng"><b>Optical engine</b>SiPh PIC + EIC on ABF substrate</div></div>
+    <div class="stage s5"><b>Optical circuit switch</b>routes light between racks<div class="zh">光路交換 OCS</div></div>
+    <div class="vsep"><span></span></div>
+    <div class="stage s6"><b>Pluggable transceiver</b>today's mainstream; CPO removes this module<div class="zh">可插拔光模組</div></div>
+  </div>
+  <div class="lanes"><div>upstream material</div><div>light source</div><div colspan="1">CPO: laser kept off-package</div><div>CPO: optics on the package</div><div>network fabric</div><div></div><div>today's alternative to CPO</div></div>
+
+  <div class="grid" style="margin-top:4px"><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div class="stick"><span></span></div><div></div><div class="stick"><span></span></div></div>
+
+  <div class="grid">
+    <div class="call l"><div class="p">Own InP laser fabs</div><div class="d">Buys substrates; grows epi and makes lasers in its own fabs. Added a fab in Greensboro, NC; expanding in Japan.</div><div class="rev feed">Not sold — feeds Components</div></div>
+    <div class="call l"><div class="p">#1 EML · CW · ultra-high-power CW</div><div class="d">200G EMLs &gt;25% of EML revenue. UHP lasers for CPO: ≈$50M/qtr run-rate targeted by Dec-26 (≈4% of Sep-26 qtr guide*).</div><div class="rev">In Components · $649.4M · 64.5%</div></div>
+    <div class="call l"><div class="p">External light source (ELS) modules</div><div class="d">First order received; delivery 2H CY2027.</div><div class="rev zero">$0 · 0% today</div></div>
+    <div class="call none">Supplies the laser, not the engine. Scale-up CPO laser shipments 2H CY2027.</div>
+    <div class="call l"><div class="p">R300 OCS</div><div class="d">Shipments doubled QoQ. First $100M+ quarter guided for Sep-26 qtr (≈8% of guide*).</div><div class="rev">In Systems · $356.9M · 35.5%</div></div>
+    <div></div>
+    <div class="call l"><div class="p">800G / 1.6T cloud transceivers</div><div class="d">Record 800G shipments; 1.6T production started; supply-capped.</div><div class="rev">In Systems · $356.9M · 35.5%</div></div>
+  </div>
+
+  <div class="band l" style="margin-top:14px">
+    <div class="name">Lumentum (LITE)<small>Q4 revenue $1,006.3M · reports by product type</small></div>
+    <div class="bar">
+      <div class="track"><div class="seg" style="width:64.5%;background:var(--lite)">Components $649.4M · 64.5%</div><div class="seg" style="width:35.5%;background:#cf7da0">Systems $356.9M · 35.5%</div></div>
+      <div class="fy">FY26: $3,014.0M — Components $2,005.6M (66.5%) · Systems $1,008.4M (33.5%)</div>
+    </div>
+  </div>
+
+  <div class="off">
+    <div class="offbox c"><h3>Coherent — outside the CPO path</h3>
+      <div class="row"><span>Communications: DCI (ZR/ZR+), pump lasers — +56% YoY</span><b>In D&amp;C · 79.0%</b></div>
+      <div class="row"><span>Industrial lasers, engineered materials (SiC, optics)</span><b>$430.5M · 21.0%</b></div></div>
+    <div class="offbox l"><h3>Lumentum — outside the CPO path</h3>
+      <div class="row"><span>Pump lasers (+80% YoY), narrow-linewidth lasers (+130% YoY)</span><b>In Components · 64.5%</b></div>
+      <div class="row"><span>Industrial lasers, cable access</span><b>In Systems · 35.5%</b></div></div>
+  </div>
+
+  <div class="foot">Revenue = quarter ended Jun 30, 2026 (Coherent) / Jun 27, 2026 (Lumentum); % = share of that company's total quarterly revenue. A product labelled "In D&amp;C" or "In Components/Systems" is part of that line; its own share is not disclosed. *Estimate: management target ÷ Lumentum's Sep-26 quarter guidance midpoint ($1.25B). Sources: company Q4 FY26 releases and earnings calls (Aug 2026). Schematic, not to scale.</div>
+</div></body></html>
