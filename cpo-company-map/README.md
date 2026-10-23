@@ -7,6 +7,7 @@ Each product label shows the revenue line it is reported in, with dollars and it
 
 - `cohr-lite.html`: Coherent (COHR) vs Lumentum (LITE), quarter ended June 2026
 - `cohr-lite.png`: rendered image, used on the Coherent and Lumentum Company DB pages in Notion
+- `largan.html` / `largan.png`: Largan 大立光's fiber-array (FA/FAU/PMLA) business on the CPO light path, with customers, suppliers, competitors, size and timeline; used on the Largan Company DB page
 
 To re-render after editing the HTML:
 

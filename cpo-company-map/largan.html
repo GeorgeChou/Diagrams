@@ -1,0 +1,152 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  :root{
+    --ink:#2b2b2b; --muted:#666;
+    --lg:#c2410c; --lg-bg:#fff4ec;
+    --laser:#f0997b; --laser-b:#b9472b;
+    --pic:#e1f3ec; --pic-b:#2b8a63;
+    --asic:#ecebfc; --asic-b:#4b3fa3;
+    --abf:#faecd9; --abf-b:#8a5a1e;
+    --fiber:#2b8a63;
+    --grey:#f3f3f3; --grey-b:#b0b0b0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+  .wrap{width:2000px;padding:32px 30px 24px}
+  h1{font-size:40px;margin:0 0 6px;text-align:center}
+  .sub{font-size:20px;color:var(--muted);text-align:center;margin-bottom:24px}
+
+  /* light path */
+  .path{display:grid;grid-template-columns:1.05fr 70px 1.25fr 70px 1.15fr 70px 1fr;align-items:stretch}
+  .stage{border-radius:12px;padding:16px 16px 14px;text-align:center;display:flex;flex-direction:column}
+  .stage .t{font-size:22px;font-weight:bold;margin-bottom:4px}
+  .stage .zh{font-size:16px;color:#555;margin-bottom:10px}
+  .stage .what{font-size:16px;color:#444;margin-bottom:10px;line-height:1.3}
+  .who{margin-top:auto;font-size:16px;line-height:1.45;background:rgba(255,255,255,.75);border-radius:8px;padding:8px 10px;text-align:left}
+  .who b{display:block;font-size:14px;color:#777;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+  .s-laser{background:var(--laser);border:2px solid var(--laser-b)}
+  .s-fau{background:var(--lg-bg);border:4px solid var(--lg);box-shadow:0 0 0 6px rgba(194,65,12,.12)}
+  .s-eng{background:var(--abf);border:2px solid var(--abf-b)}
+  .s-sys{background:var(--asic);border:2px solid var(--asic-b)}
+  .s-fau .t{color:var(--lg)}
+  .badge{display:inline-block;background:var(--lg);color:#fff;font-weight:bold;font-size:15px;border-radius:20px;padding:3px 12px;margin-bottom:8px}
+  .arrow{display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:14px;color:var(--fiber)}
+  .arrow .ln{width:100%;height:5px;background:var(--fiber);position:relative}
+  .arrow .ln::after{content:"";position:absolute;right:-2px;top:50%;transform:translateY(-50%);border-left:14px solid var(--fiber);border-top:10px solid transparent;border-bottom:10px solid transparent}
+  .arrow span{margin-top:6px}
+  .eng-inner{display:flex;gap:8px;justify-content:center;margin-bottom:10px}
+  .eng-inner div{border-radius:4px;padding:8px 6px;font-size:14px;font-weight:bold;line-height:1.2}
+  .eng-inner .a{background:var(--asic);border:2px solid var(--asic-b);color:var(--asic-b);width:90px}
+  .eng-inner .p{background:var(--pic);border:2px solid var(--pic-b);color:#1d5e43;width:130px}
+  .eng-inner .f{background:var(--lg-bg);border:2px solid var(--lg);color:var(--lg);width:70px}
+
+  /* relationships */
+  .rel{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-top:22px}
+  .rbox{border-radius:10px;padding:13px 15px;font-size:17px;line-height:1.38}
+  .rbox h3{margin:0 0 7px;font-size:19px}
+  .rbox ul{margin:0;padding-left:18px}
+  .rbox li{margin-bottom:4px}
+  .r-cust{border:2px solid var(--asic-b);background:#f6f5ff}
+  .r-cust h3{color:var(--asic-b)}
+  .r-sup{border:2px solid #555;background:#fafafa}
+  .r-comp{border:2px dashed #999;background:#fafafa}
+  .r-edge{border:2px solid var(--lg);background:var(--lg-bg)}
+  .r-edge h3{color:var(--lg)}
+  .tag{font-size:13px;color:#888;font-style:italic}
+
+  /* bottom: revenue + timeline */
+  .bottom{display:grid;grid-template-columns:0.9fr 1.1fr;gap:18px;margin-top:22px}
+  .panel{border:2px solid #ddd;border-radius:10px;padding:14px 18px}
+  .panel h3{margin:0 0 10px;font-size:20px}
+  .bar{display:flex;align-items:center;gap:12px;margin:9px 0;font-size:16px}
+  .bar .lab{width:270px}
+  .bar .tr{flex:1;height:30px;background:#f1f1f1;border-radius:5px;position:relative;overflow:hidden}
+  .bar .fill{height:100%;display:flex;align-items:center;padding-left:9px;color:#fff;font-weight:bold;font-size:15px;white-space:nowrap}
+  .bar .val{width:150px;text-align:right;font-weight:bold}
+  .note{font-size:14px;color:#777;margin-top:6px;line-height:1.35}
+
+  .tl{display:grid;grid-template-columns:repeat(6,1fr);position:relative;margin-top:12px}
+  .tl::before{content:"";position:absolute;left:4%;right:4%;top:15px;height:4px;background:#ddd}
+  .ev{text-align:center;position:relative;padding:0 6px}
+  .dot{width:30px;height:30px;border-radius:50%;margin:0 auto 8px;border:4px solid var(--lg);background:#fff;position:relative;z-index:1}
+  .dot.done{background:var(--lg)}
+  .ev .d{font-weight:bold;font-size:16px}
+  .ev .x{font-size:15px;color:#444;line-height:1.3;margin-top:3px}
+  .foot{font-size:15px;color:#666;margin-top:16px;line-height:1.4}
+</style></head>
+<body><div class="wrap">
+  <h1>Largan 大立光 enters the CPO ecosystem at the fiber-coupling step</h1>
+  <div class="sub">Where Largan's new FA / FAU business sits on the CPO light path, who it works with, and how big it is next to its lens business (as of Oct 2026)</div>
+
+  <div class="path">
+    <div class="stage s-laser">
+      <div class="t">InP light source</div><div class="zh">雷射光源 (ELSFP / CW lasers)</div>
+      <div class="what">Always-on CW lasers in a front-panel module; light leaves by fiber</div>
+      <div class="who"><b>Players</b>Lumentum · Coherent · Broadcom · Sumitomo · LandMark 聯亞 · LuxNet 華星光</div>
+    </div>
+    <div class="arrow"><div class="ln"></div><span>fiber in</span></div>
+    <div class="stage s-fau">
+      <div><span class="badge">LARGAN'S NEW BUSINESS</span></div>
+      <div class="t">Fiber coupling: FA → FAU → PMLA</div><div class="zh">光纖陣列 / 光纖陣列模組 / 微透鏡陣列</div>
+      <div class="what">Holds dozens of fibers to sub-micron accuracy (0.3 µm) at the chip edge so light enters and leaves the photonic chip. Needed on both sides of every optical engine.</div>
+      <div class="who"><b>Largan products</b>FA (fiber array) · FAU (FA + micro-lens array, assembled) · 4-layer FA and 80-channel PMLA aimed at 6.4T</div>
+    </div>
+    <div class="arrow"><div class="ln"></div><span>into PIC</span></div>
+    <div class="stage s-eng">
+      <div class="t">Optical engine on package</div><div class="zh">光引擎 (PIC + EIC)</div>
+      <div class="eng-inner"><div class="a">Switch ASIC / GPU</div><div class="p">SiPh PIC + EIC</div><div class="f">FAU</div></div>
+      <div class="who"><b>Players</b>TSMC (COUPE) · Broadcom · NVIDIA · Intel</div>
+    </div>
+    <div class="arrow"><div class="ln"></div><span>fiber out</span></div>
+    <div class="stage s-sys">
+      <div class="t">AI system &amp; network</div><div class="zh">CPO 交換器 / GPU 叢集</div>
+      <div class="what">CPO switches and GPU racks; light goes to other racks or an optical circuit switch</div>
+      <div class="who"><b>Players</b>NVIDIA · Broadcom · Arista · Cisco · hyperscalers</div>
+    </div>
+  </div>
+
+  <div class="rel">
+    <div class="rbox r-cust"><h3>Customers &amp; partners</h3><ul>
+      <li>FA passed customer certification; one customer in volume certification (Oct 8 call). Customer not named by Largan.</li>
+      <li>NVIDIA FA order <span class="tag">(media reports)</span></li>
+      <li>Invited to test on TSMC COUPE <span class="tag">(media reports)</span></li>
+      <li>Customers asked Largan to assemble full FAUs</li></ul></div>
+    <div class="rbox r-sup"><h3>Suppliers &amp; capacity</h3><ul>
+      <li>Han's Laser 大族激光: NT$650M of equipment</li>
+      <li>Builds its own inspection, dispensing and active-alignment tools</li>
+      <li>7 Taichung sites, NT$8B+; Q3 capex NT$8.18B; 2027 capex &gt; 2026</li>
+      <li>May outsource part of FAU assembly; demand exceeds capacity</li></ul></div>
+    <div class="rbox r-comp"><h3>Competitors at this step</h3><ul>
+      <li>FOCI 上詮 (3363) — Taiwan CPO fiber coupling</li>
+      <li>Corning — fiber and connectivity</li>
+      <li>TFC 天孚通信 and other Chinese passive-optics makers</li>
+      <li>EZconn 正淩 — Taiwan, traded as CPO-related</li></ul></div>
+    <div class="rbox r-edge"><h3>Largan's edge &amp; risks</h3><ul>
+      <li><b>Edge:</b> lens-grade precision, own equipment, ≈NT$100B cash</li>
+      <li><b>Risk:</b> yields set profit; chairman: "still a long way" to volume (Apr)</li>
+      <li><b>Risk:</b> fiber parts can commoditize; core lens margin at 13.5-yr low</li></ul></div>
+  </div>
+
+  <div class="bottom">
+    <div class="panel"><h3>Size: CPO vs the lens business</h3>
+      <div class="bar"><div class="lab">Lens revenue, Q3 2026 annualized</div><div class="tr"><div class="fill" style="width:100%;background:#7a7a7a">NT$62.6B</div></div><div class="val">100%</div></div>
+      <div class="bar"><div class="lab">CPO revenue today</div><div class="tr"><div class="fill" style="width:0%"></div></div><div class="val">NT$0 · 0%</div></div>
+      <div class="bar"><div class="lab">FA revenue 2027 (estimate*)</div><div class="tr"><div class="fill" style="width:2.4%;background:var(--lg)"></div></div><div class="val">≈NT$1.5B · 2.4%</div></div>
+      <div class="bar"><div class="lab">Bull case with PMLA (estimate*)</div><div class="tr"><div class="fill" style="width:14.4%;background:var(--lg)"></div></div><div class="val">≈NT$9B · 14%</div></div>
+      <div class="note">% = share of Q3 2026 revenue × 4 (NT$15.65B × 4). *Mirror Weekly estimates from industry sources (Sep 2026), not company guidance.</div>
+    </div>
+    <div class="panel"><h3>Timeline</h3>
+      <div class="tl">
+        <div class="ev"><div class="dot done"></div><div class="d">Apr 2026</div><div class="x">Chairman: "not CPO yet", FA samples only</div></div>
+        <div class="ev"><div class="dot done"></div><div class="d">Jun 2026</div><div class="x">4-layer FA &amp; PMLA shown; NT$650M tools</div></div>
+        <div class="ev"><div class="dot done"></div><div class="d">Jun–Sep</div><div class="x">7 land buys, NT$8B+; FA pilot line done</div></div>
+        <div class="ev"><div class="dot done"></div><div class="d">Oct 2026</div><div class="x">FA certified; FAU sampling begins</div></div>
+        <div class="ev"><div class="dot"></div><div class="d">Mid-2027</div><div class="x">FA / FAU shipments; FAU plant build starts</div></div>
+        <div class="ev"><div class="dot"></div><div class="d">2028+</div><div class="x">Multi-row FA, PMLA; plants done by 2030</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Sources: Largan Q3 2026 investor meeting (Oct 8), TechNews (Apr &amp; Jun 2026), Focus Taiwan (Aug 2026), TrendForce (Jun 2026), Mirror Weekly (Sep 23, 2026). Schematic, not to scale.</div>
+</div></body></html>
