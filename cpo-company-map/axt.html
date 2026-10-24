@@ -1,0 +1,169 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  :root{
+    --ink:#2b2b2b; --muted:#666;
+    --ax:#0f766e; --ax-bg:#e7f6f4;
+    --cn:#b91c1c; --cn-bg:#fdecec;
+    --raw:#ece7df; --raw-b:#7a6a55;
+    --epi:#f6efe2; --epi-b:#9a7b3c;
+    --laser:#f0997b; --laser-b:#b9472b;
+    --mod:#faecd9; --mod-b:#8a5a1e;
+    --sys:#ecebfc; --sys-b:#4b3fa3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+  .wrap{width:2000px;padding:32px 30px 24px}
+  h1{font-size:40px;margin:0 0 6px;text-align:center}
+  .sub{font-size:20px;color:var(--muted);text-align:center;margin-bottom:20px}
+
+  .gate{display:grid;grid-template-columns:0.9fr 50px 1.25fr 50px 3.95fr;margin-bottom:8px}
+  .gate .bar{grid-column:3 / 6;background:var(--cn-bg);border:2px dashed var(--cn);border-radius:8px;padding:8px 14px;font-size:17px;color:var(--cn);text-align:center}
+  .gate .bar b{font-size:18px}
+
+  .chain{display:grid;grid-template-columns:0.9fr 50px 1.25fr 50px 1fr 50px 1fr 50px 1fr 50px 0.95fr;align-items:stretch}
+  .st{border-radius:12px;padding:14px 13px 12px;text-align:center;display:flex;flex-direction:column}
+  .st .t{font-size:20px;font-weight:bold;margin-bottom:3px}
+  .st .zh{font-size:15px;color:#555;margin-bottom:8px}
+  .st .w{font-size:15px;color:#444;line-height:1.3;margin-bottom:8px}
+  .st .p{margin-top:auto;font-size:15px;line-height:1.4;background:rgba(255,255,255,.75);border-radius:8px;padding:7px 9px;text-align:left}
+  .st .p b{display:block;font-size:13px;color:#777;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px}
+  .s-raw{background:var(--raw);border:2px solid var(--raw-b)}
+  .s-sub{background:var(--ax-bg);border:4px solid var(--ax);box-shadow:0 0 0 6px rgba(15,118,110,.13)}
+  .s-sub .t{color:var(--ax);font-size:22px}
+  .s-epi{background:var(--epi);border:2px solid var(--epi-b)}
+  .s-las{background:var(--laser);border:2px solid var(--laser-b)}
+  .s-mod{background:var(--mod);border:2px solid var(--mod-b)}
+  .s-sys{background:var(--sys);border:2px solid var(--sys-b)}
+  .badge{display:inline-block;background:var(--ax);color:#fff;font-weight:bold;font-size:14px;border-radius:20px;padding:3px 12px;margin-bottom:7px}
+  .share{font-size:28px;font-weight:bold;color:var(--ax);margin:4px 0 2px}
+  .share small{display:block;font-size:14px;font-weight:normal;color:#555}
+  .ar{display:flex;align-items:center;justify-content:center}
+  .ar span{width:100%;height:5px;background:#888;position:relative}
+  .ar span::after{content:"";position:absolute;right:-2px;top:50%;transform:translateY(-50%);border-left:13px solid #888;border-top:9px solid transparent;border-bottom:9px solid transparent}
+  .ar.hot span{background:var(--ax)} .ar.hot span::after{border-left-color:var(--ax)}
+
+  .rel{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px;margin-top:20px}
+  .rb{border-radius:10px;padding:13px 15px;font-size:16px;line-height:1.38}
+  .rb h3{margin:0 0 7px;font-size:19px}
+  .rb ul{margin:0;padding-left:18px} .rb li{margin-bottom:4px}
+  .r-cust{border:2px solid var(--laser-b);background:#fff6f2} .r-cust h3{color:var(--laser-b)}
+  .r-comp{border:2px dashed #999;background:#fafafa}
+  .r-risk{border:2px solid var(--cn);background:var(--cn-bg)} .r-risk h3{color:var(--cn)}
+  .pp{display:grid;grid-template-columns:150px 1fr 110px;gap:8px;align-items:center;margin:6px 0}
+  .pp .tr{height:24px;background:#eee;border-radius:4px;overflow:hidden}
+  .pp .f{height:100%;background:var(--laser-b)}
+  .pp .v{text-align:right;font-weight:bold}
+
+  .bottom{display:grid;grid-template-columns:1fr 1.05fr 0.95fr;gap:16px;margin-top:20px}
+  .panel{border:2px solid #ddd;border-radius:10px;padding:13px 16px}
+  .panel h3{margin:0 0 10px;font-size:19px}
+  .cols{display:flex;align-items:flex-end;gap:18px;height:200px;padding:0 6px;border-bottom:2px solid #ccc}
+  .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:14px}
+  .stack{width:62px;display:flex;flex-direction:column-reverse}
+  .stack .inp{background:var(--ax)} .stack .oth{background:#a9c9c5}
+  .col .tot{font-weight:bold;font-size:15px;margin-bottom:4px}
+  .col .gm{color:#555;margin-top:2px}
+  .xl{display:flex;gap:18px;padding:6px 6px 0}
+  .xl div{flex:1;text-align:center;font-size:14px;font-weight:bold}
+  .leg{font-size:14px;color:#555;margin-top:8px}
+  .leg i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin:0 4px 0 10px}
+  .tl{display:grid;grid-template-columns:repeat(4,1fr);position:relative;margin-top:10px}
+  .tl::before{content:"";position:absolute;left:6%;right:6%;top:14px;height:4px;background:#ddd}
+  .ev{text-align:center;position:relative;padding:0 5px}
+  .dot{width:28px;height:28px;border-radius:50%;margin:0 auto 7px;border:4px solid var(--ax);background:#fff;position:relative;z-index:1}
+  .dot.done{background:var(--ax)}
+  .ev .d{font-weight:bold;font-size:15px}
+  .ev .x{font-size:14px;color:#444;line-height:1.3;margin-top:3px}
+  .kv{display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:16px}
+  .kv b{text-align:right}
+  .down{color:var(--cn)} .up{color:#15803d}
+  .note{font-size:13px;color:#777;margin-top:8px;line-height:1.35}
+  .foot{font-size:14px;color:#666;margin-top:14px;line-height:1.4}
+</style></head>
+<body><div class="wrap">
+  <h1>AXT (AXTI) in the InP ecosystem — the substrate under every laser</h1>
+  <div class="sub">AXT makes InP wafers in China (Beijing Tongmei 北京通美) and sells them to the laser makers. Status as of Oct 2026.</div>
+
+  <div class="gate"><div></div><div></div>
+    <div class="bar"><b>⛔ China export-license gate (since Feb 2025):</b> every InP wafer leaving AXT's China fabs needs a permit. AXT guides revenue only for products with permits in hand.</div>
+  </div>
+
+  <div class="chain">
+    <div class="st s-raw"><div class="t">Raw materials</div><div class="zh">銦 / 磷 原料</div>
+      <div class="w">High-purity indium and phosphorus</div>
+      <div class="p"><b>Players</b>China is the largest indium refiner; AXT has raw-material JVs</div></div>
+    <div class="ar hot"><span></span></div>
+    <div class="st s-sub"><div><span class="badge">AXT IS HERE</span></div>
+      <div class="t">InP substrate</div><div class="zh">磷化銦基板 (2–6 inch wafers)</div>
+      <div class="share">≈80%<small>AXT + Sumitomo Electric combined share</small></div>
+      <div class="p"><b>Others</b>JX Advanced Metals ≈10% (expanding 7–10×) · Freiberger (private) · Coherent makes its own 6-inch InP</div></div>
+    <div class="ar hot"><span></span></div>
+    <div class="st s-epi"><div class="t">Epitaxy</div><div class="zh">磊晶</div>
+      <div class="w">MOCVD layers grown on the substrate</div>
+      <div class="p"><b>Players</b>IQE · IntelliEPI 英特磊 · VPEC 全新 · LandMark 聯亞 · laser makers in-house</div></div>
+    <div class="ar"><span></span></div>
+    <div class="st s-las"><div class="t">Laser &amp; PD chips</div><div class="zh">雷射 / 光偵測晶片</div>
+      <div class="w">EML, CW-DFB, high-power CW lasers</div>
+      <div class="p"><b>Players</b>Lumentum · Coherent · Broadcom · Mitsubishi · Sumitomo · LandMark · LuxNet</div></div>
+    <div class="ar"><span></span></div>
+    <div class="st s-mod"><div class="t">Modules / CPO engines</div><div class="zh">光模組 / 光引擎</div>
+      <div class="w">Pluggables, ELSFP, CPO engines, fiber coupling</div>
+      <div class="p"><b>Players</b>InnoLight · Eoptolink · Coherent · TSMC COUPE · Largan (fiber arrays)</div></div>
+    <div class="ar"><span></span></div>
+    <div class="st s-sys"><div class="t">AI systems</div><div class="zh">AI 系統</div>
+      <div class="w">Switches and GPU clusters</div>
+      <div class="p"><b>Players</b>NVIDIA · Broadcom · hyperscalers</div></div>
+  </div>
+
+  <div class="rel">
+    <div class="rb r-cust"><h3>Named customers: long-term supply deals with prepayments</h3>
+      <div class="pp"><span>Coherent</span><div class="tr"><div class="f" style="width:100%"></div></div><span class="v">$25.4M</span></div>
+      <div class="pp"><span>Casela</span><div class="tr"><div class="f" style="width:88%"></div></div><span class="v">$22.3M</span></div>
+      <div class="pp"><span>Lumentum</span><div class="tr"><div class="f" style="width:0%"></div></div><span class="v">LTA</span></div>
+      <div style="font-size:15px;margin-top:6px">Backlog &gt;$100M into 2027. Customers prepay to lock supply, a sign of how tight InP is. More than half of Q2 revenue came from customers in China.</div></div>
+    <div class="rb r-comp"><h3>Competitors at the substrate step</h3><ul>
+      <li><b>Sumitomo Electric</b> (Japan): the other ≈80% leader, outside China's controls</li>
+      <li><b>JX Advanced Metals</b> (Japan): ¥120B to expand 7–10× by FY2030</li>
+      <li><b>Coherent</b>: captive 6-inch InP, ≈4× the output of 3-inch at ≈½ cost</li>
+      <li><b>Freiberger</b> (Germany, private)</li></ul></div>
+    <div class="rb r-risk"><h3>Why the stock swings</h3><ul>
+      <li><b>Permits:</b> late-2025 Q4 guide cut on China export delays</li>
+      <li><b>Dilution:</b> April 2026 offering raised $632.5M, ≈28% more shares</li>
+      <li><b>Buyer diversification:</b> customers want non-China supply (Sumitomo, JX, in-house)</li>
+      <li><b>Tongmei STAR IPO</b> awaiting Chinese approval since 2022</li></ul></div>
+  </div>
+
+  <div class="bottom">
+    <div class="panel"><h3>Revenue mix and gross margin (non-GAAP)</h3>
+      <div class="cols">
+        <div class="col"><div class="tot">$18.0M</div><div class="stack" style="height:38px"><div style="height:100%;background:#cfcfcf"></div></div></div>
+        <div class="col"><div class="tot">$26.9M</div><div class="stack" style="height:57px"><div class="inp" style="height:51%"></div><div class="oth" style="height:49%"></div></div></div>
+        <div class="col"><div class="tot">$47.6M</div><div class="stack" style="height:101px"><div class="inp" style="height:64.5%"></div><div class="oth" style="height:35.5%"></div></div></div>
+        <div class="col"><div class="tot">≈$66M guide</div><div class="stack" style="height:140px;border:2px dashed var(--ax)"><div style="height:100%;background:repeating-linear-gradient(45deg,#d7efec,#d7efec 6px,#fff 6px,#fff 12px)"></div></div></div>
+      </div>
+      <div class="xl"><div>Q2-25<br><span style="font-weight:normal">GM 8%</span></div><div>Q1-26<br><span style="font-weight:normal">GM 30%</span></div><div>Q2-26<br><span style="font-weight:normal">GM 45%</span></div><div>Q3-26<br><span style="font-weight:normal">reports Oct 29</span></div></div>
+      <div class="leg"><i style="background:var(--ax)"></i>InP ($13.6M → $30.7M)<i style="background:#a9c9c5"></i>GaAs, Ge, raw materials</div>
+      <div class="note">Grey = InP split not disclosed for Q2-25. Q2-26 InP = 64.5% of revenue.</div></div>
+    <div class="panel"><h3>InP capacity ramp (quarterly revenue capacity)</h3>
+      <div class="tl">
+        <div class="ev"><div class="dot done"></div><div class="d">Q1 2026</div><div class="x">InP $13.6M; plan: $35M/qtr by year-end</div></div>
+        <div class="ev"><div class="dot done"></div><div class="d">Q2 2026</div><div class="x">Record InP $30.7M; ahead of plan</div></div>
+        <div class="ev"><div class="dot"></div><div class="d">End-2026</div><div class="x">≈$60M/qtr (raised); ex-GaAs Beijing site repurposed</div></div>
+        <div class="ev"><div class="dot"></div><div class="d">2027</div><div class="x">$65–70M+/qtr; new Beijing InP plant, ≈$100M capex</div></div>
+      </div>
+      <div class="note" style="margin-top:14px">Analysts' 2027 revenue consensus doubled to ≈$461M (Jun → Sep 2026).</div></div>
+    <div class="panel"><h3>Stock (Yahoo Finance)</h3>
+      <div class="kv">
+        <span>Oct 23, 2026 close</span><b>$52.08</b>
+        <span>Market cap</span><b>≈$3.4B</b>
+        <span>Cash &amp; investments (Jun 30)</span><b>≈$749M</b>
+        <span>1 year / YTD</span><b class="up">+905% / +219%</b>
+        <span>vs May 22 peak ($140.83)</span><b class="down">−63%</b>
+        <span>Analyst mean target (5)</span><b>≈$92</b>
+      </div>
+      <div class="note">Earnings estimates rose while the stock fell: the market is discounting permits, dilution and China risk, not demand.</div></div>
+  </div>
+
+  <div class="foot">Sources: AXT Q2 2026 8-K and call (Jul 30), Semiconductor Today (May 2026), TrendForce (substrate shares, JX), Futurum (Coherent 6-inch), TIKR (Aug &amp; Oct 2026), Tiger (Q4 2025 guide cut). Schematic, not to scale. Analysis, not investment advice.</div>
+</div></body></html>
