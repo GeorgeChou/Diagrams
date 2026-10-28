@@ -1,0 +1,76 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>Data center power and cooling: who leads each segment</title>
+<style>
+  :root{--ink:#2b2b2b;--muted:#666;--line:#ddd;--dot:#534ab7;--vrt:#eaf1fb;--vrt-b:#1f5fa8;--hdr:#f4f3ef}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+  .wrap{width:1700px;padding:30px 30px 24px}
+  h1{font-size:34px;margin:0 0 6px;text-align:center}
+  .sub{font-size:18px;color:var(--muted);text-align:center;margin-bottom:20px}
+  .flow{display:grid;grid-template-columns:230px repeat(6,1fr);column-gap:8px;margin-bottom:6px}
+  .flow div{font-size:15px;color:var(--muted);text-align:center}
+  .flow .arrow{grid-column:2 / span 6;border-top:2px solid #b5b5b5;position:relative;margin:4px 0 10px}
+  .flow .arrow:after{content:"";position:absolute;right:-2px;top:-7px;border-left:12px solid #b5b5b5;border-top:6px solid transparent;border-bottom:6px solid transparent}
+  table{width:100%;border-collapse:separate;border-spacing:8px 0;table-layout:fixed}
+  th{background:var(--hdr);border-radius:8px 8px 0 0;padding:12px 8px;font-size:19px;vertical-align:bottom}
+  th small{display:block;font-weight:normal;font-size:15px;color:var(--muted);margin-top:4px}
+  th:first-child{background:none;text-align:left}
+  td{border-bottom:1px solid var(--line);padding:11px 6px;text-align:center;font-size:15px;color:#444;vertical-align:middle;height:78px}
+  td:first-child{text-align:left;font-size:19px;font-weight:bold;color:var(--ink)}
+  td:first-child small{display:block;font-weight:normal;font-size:14px;color:var(--muted)}
+  tr.v td{background:var(--vrt);border-bottom:2px solid var(--vrt-b)}
+  tr.v td:first-child{color:var(--vrt-b)}
+  .d{display:block;margin:0 auto 5px;border-radius:50%;background:var(--dot)}
+  .d3{width:30px;height:30px}.d2{width:20px;height:20px;opacity:.75}.d1{width:11px;height:11px;opacity:.55}
+  .legend{display:flex;gap:28px;align-items:center;justify-content:center;margin:18px 0 6px;font-size:16px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .legend .d{display:inline-block;margin:0}
+  .src{font-size:13px;color:#888;text-align:center;line-height:1.5;margin-top:8px}
+</style></head>
+<body><div class="wrap">
+<h1>Data center power and cooling: who leads each segment</h1>
+<div class="sub">Vertiv and its competitors from the grid connection to the chip · October 2026</div>
+
+<div class="flow"><div></div><div style="text-align:left">Grid side</div><div></div><div></div><div></div><div></div><div style="text-align:right">Chip side</div><div class="arrow"></div></div>
+
+<table>
+<colgroup><col style="width:230px"><col><col><col><col><col><col></colgroup>
+<thead><tr>
+<th>Vendor</th>
+<th>Switchgear, busway<small>Busway +40% y/y (1Q25)</small></th>
+<th>UPS, power distribution<small>DC UPS ≈$8.8B (2025)</small></th>
+<th>Facility cooling<small>≈$16.8B by 2028</small></th>
+<th>Liquid cooling, CDU<small>≈$3.7–6.6B (2026)</small></th>
+<th>Prefab, containerized<small>≈$19–20B (2026)</small></th>
+<th>Rack, server power<small>PSU, power shelf, HVDC</small></th>
+</tr></thead>
+<tbody>
+<tr class="v"><td>Vertiv<small>NYSE: VRT</small></td>
+<td><i class="d d2"></i>E+I Engineering</td><td><i class="d d3"></i>#1 large 3-phase UPS</td><td><i class="d d3"></i>#1 thermal</td><td><i class="d d2"></i>CoolTera, PurgeRite</td><td><i class="d d3"></i>MegaMod, OneCore, DSX POD</td><td><i class="d d1"></i>Entering</td></tr>
+<tr><td>Schneider Electric<small>EPA: SU</small></td>
+<td><i class="d d3"></i></td><td><i class="d d3"></i>Tied #1 overall DCPI</td><td><i class="d d2"></i></td><td><i class="d d2"></i>Motivair (75%)</td><td><i class="d d3"></i>EcoStruxure, DSX POD</td><td><i class="d d1"></i></td></tr>
+<tr><td>Eaton<small>NYSE: ETN</small></td>
+<td><i class="d d3"></i></td><td><i class="d d3"></i>Top 5 UPS</td><td><i class="d d1"></i>Boyd Thermal</td><td><i class="d d1"></i>Boyd Thermal</td><td><i class="d d2"></i>DSX POD</td><td><i class="d d1"></i></td></tr>
+<tr><td>ABB · Siemens<small>Grid equipment majors</small></td>
+<td><i class="d d3"></i></td><td><i class="d d2"></i>ABB top 5 UPS</td><td></td><td></td><td><i class="d d1"></i></td><td></td></tr>
+<tr><td>華為 Huawei<small>Private</small></td>
+<td><i class="d d1"></i></td><td><i class="d d3"></i>Top 5 UPS</td><td><i class="d d2"></i></td><td><i class="d d2"></i></td><td><i class="d d3"></i>FusionModule</td><td><i class="d d1"></i></td></tr>
+<tr><td>台達電 Delta Electronics<small>TWSE: 2308</small></td>
+<td></td><td><i class="d d2"></i></td><td><i class="d d1"></i></td><td><i class="d d3"></i>NT$48B revenue (2025)</td><td><i class="d d2"></i>AI container, DSX POD</td><td><i class="d d3"></i>&gt;60% of HVDC</td></tr>
+<tr><td>JCI · Trane · Stulz<small>HVAC majors</small></td>
+<td></td><td></td><td><i class="d d3"></i>JCI #2, Stulz #3</td><td><i class="d d2"></i>Trane owns LiquidStack</td><td></td><td></td></tr>
+<tr><td>Liquid specialists<small>CoolIT (Ecolab), others</small></td>
+<td></td><td></td><td></td><td><i class="d d3"></i>CoolIT #1 (2023)</td><td></td><td></td></tr>
+<tr><td>光寶科 Lite-On<small>TWSE: 2301</small></td>
+<td></td><td></td><td></td><td><i class="d d1"></i>25% of DCX</td><td></td><td><i class="d d2"></i>≈20% of AI server power</td></tr>
+</tbody></table>
+
+<div class="legend">
+<span><i class="d d3"></i>Leader</span><span><i class="d d2"></i>Major player</span><span><i class="d d1"></i>Present or entering</span>
+<span>Overall physical infrastructure: Schneider and Vertiv virtually tied for #1 (Dell'Oro, 1Q25)</span>
+</div>
+<div class="src">Dot size is an analyst judgment; labels show published figures. Sources: Dell'Oro (DCPI 1Q25; thermal #1 Mar 2026), Omdia (large 3-phase UPS #1; cooling ranks and liquid cooling #1, 2023 data),
+MarketsandMarkets (DC UPS 2025, top 5 ≈40–42%), KGI (Delta HVDC &gt;60%, Lite-On ≈20%, Jul 2026; Delta liquid cooling revenue, Apr 2026), Vertiv 10-K and 2026 Investor Conference, company releases.
+Segment sizes come from different research firms and years and do not add up to one total.</div>
+</div></body></html>
